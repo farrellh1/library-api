@@ -11,12 +11,13 @@ datasource db {
 }
 
 model User {
-  id        Int        @id @default(autoincrement())
-  email     String     @unique
-  whatsapp  String     @unique
-  name      String
-  password  String
-  bookmarks Bookmark[]
+  id           Int        @id @default(autoincrement())
+  email        String     @unique
+  whatsapp     String     @unique
+  name         String
+  password     String
+  refreshToken String
+  bookmarks    Bookmark[]
 }
 
 model Book {
@@ -25,8 +26,8 @@ model Book {
   author   String
   category String     @unique
   rating   Float
-  synopsys String     @db.Text()
-  file     String     @db.Text()
+  synopsys String
+  file     String
   Bookmark Bookmark[]
 }
 
