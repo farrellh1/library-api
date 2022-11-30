@@ -16,7 +16,7 @@ model User {
   whatsapp     String     @unique
   name         String
   password     String
-  refreshToken String
+  refreshToken String?
   bookmarks    Bookmark[]
 }
 
