@@ -17,24 +17,30 @@ model User {
   name         String
   password     String
   refreshToken String?
-  bookmarks    Bookmark[]
+  Bookmarks    Bookmark[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
 
 model Book {
-  id       Int        @id @default(autoincrement())
-  title    String
-  author   String
-  category String     @unique
-  rating   Float
-  synopsys String
-  file     String
-  Bookmark Bookmark[]
+  id        Int        @id @default(autoincrement())
+  title     String
+  author    String
+  category  String     @unique
+  rating    Float
+  synopsys  String
+  file      String
+  Bookmark  Bookmark[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Bookmark {
-  id     Int  @id @default(autoincrement())
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
-  book   Book @relation(fields: [bookId], references: [id])
-  bookId Int
+  id        Int      @id @default(autoincrement())
+  User      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  Book      Book     @relation(fields: [bookId], references: [id])
+  bookId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
