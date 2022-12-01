@@ -1,14 +1,33 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { IsString } from 'class-validator';
-import { SignInAuthDto } from './signin-auth.dto';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  MinLength,
+} from 'class-validator';
+import { Match } from '../decorator/match.decorator';
 
-export class SignUpAuthDto extends PartialType(SignInAuthDto) {
+export class SignUpAuthDto {
   @IsString()
-  name: string
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
 
   @IsString()
-  whatsapp: string
+  @IsNotEmpty()
+  name: string;
 
   @IsString()
-  passwordConfirmation: string
+  @IsNotEmpty()
+  whatsapp: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(6)
+  password: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(6)
+  @Match(SignUpAuthDto, (s) => s.password)
+  password_confirmation: string;
 }
