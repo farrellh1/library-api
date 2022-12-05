@@ -12,7 +12,7 @@ import { JwtPayload, Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
 import * as dotenv from 'dotenv';
 import { User } from '@prisma/client';
-import { UserService } from 'src/user/user.service';
+import { UserService } from 'src/users/user.service';
 dotenv.config();
 
 @Injectable()
