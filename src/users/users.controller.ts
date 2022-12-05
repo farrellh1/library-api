@@ -7,15 +7,15 @@ import {
   Delete,
   Query,
 } from '@nestjs/common';
-import { UserService } from './users.service';
+import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
 
 @ApiTags('User')
 @Controller('users')
-export class UserController {
-  constructor(private readonly userService: UserService) {}
+export class UsersController {
+  constructor(private readonly userService: UsersService) {}
 
   @Get()
   @ApiBearerAuth()
