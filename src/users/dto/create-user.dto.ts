@@ -1,15 +1,15 @@
-import { IsString } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateUserDto {
-  @IsString()
+  @IsNotEmpty()
   email: string;
 
-  @IsString()
+  @IsNotEmpty()
   whatsapp: string;
 
-  @IsString()
+  @IsNotEmpty()
   name: string;
 
-  @IsString()
+  @IsNotEmpty()
   password: string;
 }
