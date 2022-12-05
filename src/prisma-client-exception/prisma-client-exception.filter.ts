@@ -13,10 +13,10 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
     switch (exception.code) {
       case 'P2002':
         status = HttpStatus.CONFLICT;
-        message = exception.message.replace(/\n/g, '');
+        const constraint = exception.meta.target[0]
         response.status(status).json({
           statusCode: status,
-          message: message,
+          message: `Unique constraint failed on the ${constraint}`,
         });
         break;
       case 'P2025':
