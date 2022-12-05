@@ -26,7 +26,7 @@ model Book {
   id        Int        @id @default(autoincrement())
   title     String
   author    String
-  category  String     @unique
+  category  String
   rating    Float
   synopsys  String
   file      String
