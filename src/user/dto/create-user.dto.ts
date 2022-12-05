@@ -1,15 +1,15 @@
-import { IsString } from "class-validator"
+import { IsString } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
-  email: string
+  email: string;
 
   @IsString()
-  whatsapp: string
+  whatsapp: string;
 
   @IsString()
-  name: string
+  name: string;
 
   @IsString()
-  password: string
+  password: string;
 }
