@@ -1,8 +1,6 @@
 import {
   Injectable,
-  NotFoundException,
   UnauthorizedException,
-  ConflictException,
   ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -12,7 +10,7 @@ import { JwtPayload, Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
 import * as dotenv from 'dotenv';
 import { User } from '@prisma/client';
-import { UserService } from 'src/users/users.service';
+import { UsersService } from 'src/users/users.service';
 dotenv.config();
 
 @Injectable()
@@ -20,7 +18,7 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
-    private userService: UserService,
+    private userService: UsersService,
   ) {}
 
   async signIn(signInAuthDto: SignInAuthDto): Promise<Tokens> {
@@ -39,7 +37,7 @@ export class AuthService {
     const { email, password, name, whatsapp } = signUpAuthDto;
 
     //check user
-    await this.findUser(email, 'sign-up');
+    await this.findUser(email);
 
     //hash the password
     const hashedPassword = await this.hashData(password);
@@ -137,18 +135,12 @@ export class AuthService {
     });
   }
 
-  async findUser(email: string, options = 'sign-in'): Promise<any> {
+  async findUser(email: string): Promise<any> {
     const user = await this.prisma.user.findUnique({
       where: {
         email: email,
       },
     });
-
-    if (user && options == 'sign-up')
-      throw new ConflictException('Email already registered');
-    if (!user && options == 'sign-up') return;
-    if (!user)
-      throw new NotFoundException(`User with email ${email} not registered`);
 
     return user;
   }
