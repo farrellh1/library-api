@@ -27,7 +27,7 @@ model Book {
   title     String
   author    String
   category  String
-  rating    Float
+  rating    Decimal
   synopsys  String
   file      String
   Bookmark  Bookmark[]
