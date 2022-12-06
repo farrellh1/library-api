@@ -30,7 +30,7 @@ model Book {
   rating    Decimal
   synopsys  String
   file      String
-  Bookmark  Bookmark[]
+  Bookmarks  Bookmark[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 }

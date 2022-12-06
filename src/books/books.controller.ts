@@ -11,6 +11,7 @@ import {
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
+import { QueryBookDto } from './dto/query-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { BookEntity } from './entities/book.entity';
 
@@ -27,8 +28,8 @@ export class BooksController {
   @Get()
   @ApiBearerAuth()
   @ApiOkResponse({ type: BookEntity, isArray: true })
-  findAll(@Query('page') page: number) {
-    return this.bookService.findAll(page);
+  findAll(@Query() query: QueryBookDto) {
+    return this.bookService.findAll(query);
   }
 
   @Get(':id')
