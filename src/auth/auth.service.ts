@@ -92,19 +92,15 @@ export class AuthService {
   }
 
   async generateTokens(user: User): Promise<Tokens> {
-    const [accessToken, refreshToken] = [
-      await this.generateAccessToken(user),
-      await this.generateRefreshToken(user),
-    ];
-
     return {
-      access_token: accessToken,
-      refresh_token: refreshToken,
+      access_token: await this.generateAccessToken(user),
+      refresh_token: await this.generateRefreshToken(user),
     };
   }
 
   async generateAccessToken(user: User): Promise<string> {
     const jwtPayload = this.jwtPayload(user);
+
     return await this.jwtService.signAsync(jwtPayload, {
       secret: process.env.JWT_SECRET,
       expiresIn: '15m',
@@ -136,13 +132,11 @@ export class AuthService {
   }
 
   async findUser(email: string): Promise<any> {
-    const user = await this.prisma.user.findUnique({
+    return await this.prisma.user.findUnique({
       where: {
         email: email,
       },
     });
-
-    return user;
   }
 
   async checkPassword(user: User, password: string): Promise<User> {
@@ -156,7 +150,7 @@ export class AuthService {
   async checkRefreshToken(refresh_token: string, user: User): Promise<void> {
     const matchRefreshToken = await bcrypt.compare(
       refresh_token,
-      user.refreshToken!,
+      user.refreshToken,
     );
 
     if (matchRefreshToken) return;
