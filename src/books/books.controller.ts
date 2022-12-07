@@ -28,8 +28,9 @@ export class BooksController {
   @Get()
   @ApiBearerAuth()
   @ApiOkResponse({ type: BookEntity, isArray: true })
-  findAll(@Query() query: QueryBookDto) {
-    return this.bookService.findAll(query);
+  async findAll(@Query() query: QueryBookDto) {
+    const books = await this.bookService.findAll(query);
+    return books.map((book) => new BookEntity(book));
   }
 
   @Get(':id')
