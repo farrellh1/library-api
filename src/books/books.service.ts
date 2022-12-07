@@ -16,32 +16,30 @@ export class BooksService {
 
   async findAll(queryBookDto: QueryBookDto) {
     let { page, search } = queryBookDto;
+    let query: object;
 
     if (!page) page = 1;
 
     if (search) {
-      return await this.prisma.book.findMany({
-        skip: 15 * (page - 1),
-        take: 15,
-        where: {
-          OR: [
-            {
-              title: {
-                contains: search,
-              },
+      query = {
+        OR: [
+          {
+            title: {
+              contains: search,
             },
-            {
-              category: {
-                contains: search,
-              },
+          },
+          {
+            category: {
+              contains: search,
             },
-          ],
-        },
-      });
+          },
+        ],
+      };
     }
     return await this.prisma.book.findMany({
       skip: 15 * (page - 1),
       take: 15,
+      where: query,
     });
   }
 
