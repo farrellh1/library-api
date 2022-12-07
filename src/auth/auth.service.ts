@@ -103,7 +103,7 @@ export class AuthService {
 
     return await this.jwtService.signAsync(jwtPayload, {
       secret: process.env.JWT_SECRET,
-      expiresIn: '15m',
+      expiresIn: '1d',
     });
   }
 
