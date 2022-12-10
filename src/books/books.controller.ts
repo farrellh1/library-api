@@ -9,6 +9,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Book } from '@prisma/client';
+import { CurrentUserId } from 'src/common/decorators';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { QueryBookDto } from './dto/query-book.dto';
@@ -21,35 +23,45 @@ export class BooksController {
   constructor(private readonly bookService: BooksService) {}
 
   @Post()
-  async create(@Body() createBookDto: CreateBookDto) {
-    return new BookEntity(await this.bookService.create(createBookDto));
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: BookEntity })
+  async create(@Body() createBookDto: CreateBookDto): Promise<Book> {
+    return new BookEntity(await this.bookService.create(createBookDto), false);
   }
 
   @Get()
   @ApiBearerAuth()
   @ApiOkResponse({ type: BookEntity, isArray: true })
-  async findAll(@Query() query: QueryBookDto) {
-    const books = await this.bookService.findAll(query);
-    return books.map((book) => new BookEntity(book));
+  async findAll(
+    @CurrentUserId() userId: number,
+    @Query() query: QueryBookDto,
+  ): Promise<Book[]> {
+    return await this.bookService.findAll(userId, query);
   }
 
   @Get(':id')
   @ApiBearerAuth()
   @ApiOkResponse({ type: BookEntity })
-  async findOne(@Param('id') id: string) {
-    return new BookEntity(await this.bookService.findOne(+id));
+  async findOne(
+    @CurrentUserId() userId: number,
+    @Param('id') id: string,
+  ): Promise<Book> {
+    return await this.bookService.findOne(userId, +id);
   }
 
   @Patch(':id')
   @ApiBearerAuth()
   @ApiOkResponse({ type: BookEntity })
-  update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateBookDto: UpdateBookDto,
+  ): Promise<Book> {
     return this.bookService.update(+id, updateBookDto);
   }
 
   @Delete(':id')
   @ApiBearerAuth()
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<void> {
     return this.bookService.remove(+id);
   }
 }

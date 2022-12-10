@@ -36,9 +36,6 @@ export class AuthService {
   async signUp(signUpAuthDto: SignUpAuthDto): Promise<Tokens> {
     const { email, password, name, whatsapp } = signUpAuthDto;
 
-    //check user
-    await this.findUser(email);
-
     //hash the password
     const hashedPassword = await this.hashData(password);
 
@@ -49,26 +46,15 @@ export class AuthService {
       name: name,
       whatsapp: whatsapp,
     });
-    const tokens = await this.generateTokens(user);
 
-    //update refresh token
-    await this.updateRefreshToken(user.id, tokens.refresh_token);
-
-    //return tokens
-    return tokens;
+    return this.generateAndUpdateRefreshToken(user);
   }
 
   async refresh(email: string, refreshToken: string) {
     const user = await this.findUser(email);
     await this.checkRefreshToken(refreshToken, user);
 
-    const tokens = await this.generateTokens(user);
-
-    //update refresh token
-    await this.updateRefreshToken(user.id, tokens.refresh_token);
-
-    //return tokens
-    return tokens;
+    return await this.generateAndUpdateRefreshToken(user);
   }
 
   async logout(userId: number) {
@@ -89,6 +75,12 @@ export class AuthService {
 
   async hashData(password: string): Promise<string> {
     return await bcrypt.hash(password, 10);
+  }
+
+  async generateAndUpdateRefreshToken(user: User): Promise<Tokens> {
+    const tokens = await this.generateTokens(user);
+    await this.updateRefreshToken(user.id, tokens.refresh_token);
+    return tokens;
   }
 
   async generateTokens(user: User): Promise<Tokens> {
@@ -132,19 +124,19 @@ export class AuthService {
   }
 
   async findUser(email: string): Promise<any> {
-    return await this.prisma.user.findUnique({
+    return await this.prisma.user.findUniqueOrThrow({
       where: {
         email: email,
       },
     });
   }
 
-  async checkPassword(user: User, password: string): Promise<User> {
+  async checkPassword(user: User, password: string): Promise<void> {
     const matchPassword = await bcrypt.compare(password, user.password);
 
-    if (matchPassword) return user;
+    if (matchPassword) return;
 
-    throw new UnauthorizedException("Email or password does't not match");
+    throw new UnauthorizedException('Invalid email or password');
   }
 
   async checkRefreshToken(refresh_token: string, user: User): Promise<void> {

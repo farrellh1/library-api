@@ -17,9 +17,11 @@ model User {
   name         String
   password     String
   refreshToken String?
-  Bookmarks    Bookmark[]
+  books        Bookmark[]
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
+
+  @@map("users")
 }
 
 model Book {
@@ -30,16 +32,18 @@ model Book {
   rating    Decimal
   synopsys  String
   file      String
-  Bookmarks  Bookmark[]
+  users     Bookmark[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+
+  @@map("books")
 }
 
 model Bookmark {
   id        Int      @id @default(autoincrement())
-  User      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   userId    Int
-  Book      Book     @relation(fields: [bookId], references: [id])
+  book      Book     @relation(fields: [bookId], references: [id])
   bookId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -5,9 +5,10 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AccessTokenGuard } from './common/guards';
 import { APP_GUARD } from '@nestjs/core';
 import { BookModule } from './books/books.module';
+import { BookmarksModule } from './bookmarks/bookmarks.module';
 
 @Module({
-  imports: [UserModule, AuthModule, PrismaModule, BookModule],
+  imports: [UserModule, AuthModule, PrismaModule, BookModule, BookmarksModule],
   providers: [
     {
       provide: APP_GUARD,
