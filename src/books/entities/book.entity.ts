@@ -15,9 +15,10 @@ export class BookEntity implements Book {
   createdAt: Date;
   updatedAt: Date;
 
-  constructor(partial: Partial<BookEntity>) {
+  is_bookmarked: boolean;
+
+  constructor(partial: Partial<BookEntity>, is_bookmarked: boolean) {
     Object.assign(this, partial);
+    this.is_bookmarked = is_bookmarked;
   }
 }
-
-

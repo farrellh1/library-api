@@ -1,0 +1,33 @@
+To make a file upload in NestJS, you need to use the built-in MulterModule from the @nestjs/platform-express package. Here's an example of how you can use MulterModule to allow file uploads in your NestJS application:
+
+Copy code
+import { MulterModule } from '@nestjs/platform-express';
+
+@Module({
+  imports: [
+    MulterModule.register({
+      dest: './uploads',
+    }),
+  ],
+  // Other module configurations here...
+})
+export class AppModule {}
+Once you have imported and configured the MulterModule, you can use it in your controllers to handle file uploads. Here's an example of how you can use MulterModule in a controller to handle file uploads:
+
+Copy code
+import { Controller, Post, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+
+@Controller('upload')
+export class UploadController {
+  @Post()
+  @UseInterceptors(FileInterceptor('file'))
+  uploadFile(@UploadedFile() file) {
+    // Use the file object to do something with the uploaded file, such as saving it to a database or filesystem.
+  }
+}
+In this example, the uploadFile method is decorated with the @Post() decorator, which specifies that this method should handle HTTP POST requests. The @UseInterceptors() decorator is then used to attach a FileInterceptor to the method, which will be used to handle the file upload. The FileInterceptor is provided with the name of the field in the request body that contains the uploaded file (in this case, it's file).
+
+Finally, the @UploadedFile() decorator is used to access the uploaded file object in the controller method. This file object contains information about the uploaded file, such as its original name and the destination where it was saved.
+
+I hope this helps! Let me know if you have any other questions.
